@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Oscar Tristan Huizinga</title>
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://find-oscar.example/en/">
+            <link rel="alternate" hreflang="en" href="https://find-oscar.example/en/">
+            <link rel="alternate" hreflang="tr" href="https://find-oscar.example/tr/">
+            <link rel="alternate" hreflang="nl" href="https://find-oscar.example/nl/">
+            <link rel="alternate" hreflang="ru" href="https://find-oscar.example/ru/">
+        <style>
+        body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+               display: grid; place-items: center; min-height: 100vh; background: #f8fafc; color: #0f172a; }
+        main { text-align: center; padding: 2rem 1.5rem; max-width: 26rem; }
+        img { width: 8rem; height: 8rem; border-radius: 9999px; object-fit: cover; object-position: center top; }
+        h1 { font-size: 1.25rem; margin: 1rem 0 0.25rem; }
+        p { margin: 0 0 1.5rem; color: #475569; }
+        ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+        a { display: block; padding: 0.85rem 1rem; border-radius: 0.5rem; background: #0f172a;
+            color: #fff; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <main>
+        <img src="/photos/oscar-1-passport.jpg" alt="Oscar Tristan Huizinga">
+        <h1>Oscar Tristan Huizinga</h1>
+        <p>Missing person</p>
+        <ul>
+                            <li><a href="/en">English</a></li>
+                            <li><a href="/tr">Türkçe</a></li>
+                            <li><a href="/nl">Nederlands</a></li>
+                            <li><a href="/ru">Русский</a></li>
+                    </ul>
+    </main>
+
+    <script>
+        // Send visitors straight to their own language when we publish one,
+        // but leave the list behind for anyone whose browser reports
+        // something we do not translate.
+        const available = ["en","tr","nl","ru"];
+        const preferred = (navigator.languages || [navigator.language || ''])
+            .map((tag) => tag.slice(0, 2).toLowerCase())
+            .find((tag) => available.includes(tag));
+
+        if (preferred) {
+            window.location.replace('/' + preferred + '/');
+        }
+    </script>
+</body>
+</html>
