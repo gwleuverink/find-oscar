@@ -1,0 +1,109 @@
+<?php
+
+use App\Support\CaseFile;
+
+// Spelled out rather than read from config, because Pest resolves datasets
+// before the container boots. The test below keeps the two in step.
+dataset('locales', ['en', 'tr', 'nl', 'ru']);
+
+it('publishes exactly the locales it is configured for', function () {
+    expect(config('oscar.locales'))->toEqualCanonicalizing(['en', 'tr', 'nl', 'ru']);
+});
+
+it('renders every locale', function (string $locale) {
+    $this->get("/{$locale}")
+        ->assertOk()
+        ->assertSee(config('oscar.full_name'))
+        ->assertSee('lang="'.$locale.'"', escape: false);
+})->with('locales');
+
+it('translates every string it renders', function (string $locale) {
+    // A missing key falls through to its own dotted path, which would ship
+    // "site.contact.call" to a stranger holding the one detail that
+    // finds him. Catch it here rather than in production.
+    expect($this->get("/{$locale}")->getContent())
+        ->not->toMatch('/site\.[a-z_]+\.[a-z_]+/');
+})->with('locales');
+
+/*
+ * These guards are written as patterns rather than as a list of the actual
+ * details. The repository has to be public for Pages to serve it, so a
+ * test that names what it protects would publish it on line one.
+ */
+
+it('publishes no bank details or home addresses', function (string $locale) {
+    $content = $this->get("/{$locale}")->getContent();
+
+    expect($content)
+        ->not->toMatch('/\bNL\d{2}[A-Z]{4}\d{10}\b/')    // an IBAN
+        ->not->toMatch('/\b\d{4}\s?[A-Z]{2}\b(?![^<]*<\/code>)/');  // a Dutch postcode
+})->with('locales');
+
+it('dials nothing the case configuration does not publish', function (string $locale) {
+    // The family asked for no private numbers on the page. Rather than naming
+    // the one to keep out, this pins every dialled number to the handful
+    // configuration declares, so a stray one cannot slip through.
+    $case = CaseFile::fromConfig();
+
+    $published = collect($case->tipContacts())
+        ->pluck('number')
+        ->map(fn (string $number): string => preg_replace('/[^0-9+]/', '', $number))
+        ->push($case->emergencyNumber())
+        ->all();
+
+    $content = $this->get("/{$locale}")->getContent();
+
+    preg_match_all('/(?:tel:|wa\.me\/)([+0-9]+)/', $content, $matches);
+
+    expect($matches[1])->not->toBeEmpty();
+
+    foreach (array_unique($matches[1]) as $dialled) {
+        expect(ltrim($dialled, '+'))->toBeIn(
+            array_map(fn (string $number): string => ltrim($number, '+'), $published)
+        );
+    }
+})->with('locales');
+
+it('only offers numbers that can be dialled from abroad as tip lines', function () {
+    // Short codes such as 112 reach the caller's own country, not Turkey,
+    // so every tip route has to carry a full international prefix.
+    foreach (CaseFile::fromConfig()->tipContacts() as $contact) {
+        expect($contact['number'])->toStartWith('+');
+    }
+});
+
+it('sends the emergency number somewhere different from the tip lines', function () {
+    $case = CaseFile::fromConfig();
+
+    expect(collect($case->tipContacts())->pluck('number'))
+        ->not->toContain($case->emergencyNumber());
+});
+
+it('lists every locale as an export path', function () {
+    // The crawler should reach all four from the chooser, but a locale that
+    // is not also listed here would vanish from the build the moment a
+    // link to it is moved or removed.
+    expect(config('export.paths'))->toContain(...config('oscar.locales'));
+});
+
+it('serves photos from the site root', function (string $locale) {
+    // The export copies public/ to the root of the build, so absolute paths
+    // resolve identically in development and in the published site.
+    expect($this->get("/{$locale}")->getContent())
+        ->toContain('src="/photos/')
+        ->not->toContain('src="photos/');
+})->with('locales');
+
+it('renders a print-only poster on every locale', function (string $locale) {
+    expect($this->get("/{$locale}")->getContent())->toContain('break-inside-avoid print:block');
+})->with('locales');
+
+it('embeds a QR code for this locale in the poster', function (string $locale) {
+    $svg = CaseFile::fromConfig()->qrCodeSvg($locale);
+
+    // An XML prolog partway down a page is invalid, and the browser would
+    // render it as text across the poster instead of dropping it.
+    expect($svg)->toStartWith('<svg')->not->toContain('<?xml');
+
+    expect($this->get("/{$locale}")->getContent())->toContain($svg);
+})->with('locales');

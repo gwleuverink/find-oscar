@@ -1,0 +1,61 @@
+@import 'tailwindcss';
+
+@source '../views';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    /*
+     * A system stack, chosen rather than settled for. The page has to render
+     * Turkish diacritics and Cyrillic correctly on a cheap phone over a
+     * slow connection, and no webfont survives that trade honestly.
+     */
+    --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+        'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji';
+
+    /*
+     * Every hard fact on this page is set in mono: dates, times, flight
+     * numbers, phone numbers, the day count. It is the typography of
+     * passports and police records, and it reads as evidence.
+     */
+    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+    /*
+     * One red, and it means urgency. Deeper and less orange than a default
+     * alert red so it reads as a printed notice rather than a banner ad.
+     */
+    --color-notice-50: oklch(0.971 0.013 17.4);
+    --color-notice-200: oklch(0.885 0.062 18.3);
+    --color-notice-300: oklch(0.808 0.114 19.6);
+    --color-notice-600: oklch(0.535 0.208 25.3);
+    --color-notice-700: oklch(0.468 0.185 25.6);
+    --color-notice-800: oklch(0.405 0.153 25.7);
+    --color-notice-900: oklch(0.355 0.126 25.7);
+}
+
+/*
+ * The page doubles as a printable flyer, so anything that only makes sense
+ * on a screen is dropped and the remaining blocks are kept whole
+ * across page breaks. Sized for A4 with a printer-safe margin.
+ */
+@media print {
+    @page {
+        size: A4;
+        margin: 12mm;
+    }
+
+    html {
+        font-size: 11pt;
+    }
+
+    section,
+    figure,
+    dl > div {
+        break-inside: avoid;
+    }
+
+    h1,
+    h2,
+    h3 {
+        break-after: avoid;
+    }
+}
