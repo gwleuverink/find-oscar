@@ -18,6 +18,8 @@
     <meta property="og:title" content="{{ $title }}">
     <meta property="og:description" content="{{ $description }}">
     <meta property="og:image" content="{{ $case->ogImageUrl() }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ $case->url($locale) }}">
     <meta property="og:locale" content="{{ $locale }}">
     <meta name="twitter:card" content="summary_large_image">

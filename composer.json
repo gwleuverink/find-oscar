@@ -61,12 +61,13 @@
         "build": [
             "npm run build",
             "rm -f public/hot",
-            "APP_ENV=production APP_URL=https://find-oscar.example php artisan export"
+            "@php artisan og:card",
+            "APP_ENV=production APP_URL=https://find-oscar.com php artisan export"
         ],
         "publish": [
             "@composer run format",
             "@composer run build",
-            "npx gh-pages --dist=dist --cname=find-oscar.example --message=publish --nojekyll"
+            "npx gh-pages --dist=dist --cname=find-oscar.com --message=publish --nojekyll"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

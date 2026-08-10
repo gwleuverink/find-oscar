@@ -5,7 +5,15 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('chooser', ['case' => CaseFile::fromConfig()]);
+    App::setLocale(config('oscar.default_locale'));
+
+    $case = CaseFile::fromConfig();
+
+    return view('chooser', [
+        'case' => $case,
+        'title' => __('site.meta.title', ['age' => $case->age()]),
+        'description' => __('site.meta.description', ['age' => $case->age()]),
+    ]);
 });
 
 Route::get('/{locale}', function (string $locale) {

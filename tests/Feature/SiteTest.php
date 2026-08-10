@@ -94,6 +94,29 @@ it('serves photos from the site root', function (string $locale) {
         ->not->toContain('src="photos/');
 })->with('locales');
 
+it('gives the shared root a preview card', function () {
+    // The bare domain is what gets pasted into WhatsApp. Without these it
+    // posts as a naked link with no face and no name attached.
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('property="og:title"', escape: false)
+        ->assertSee('property="og:description"', escape: false)
+        ->assertSee('property="og:image"', escape: false)
+        ->assertSee('name="twitter:card"', escape: false)
+        ->assertDontSee('noindex');
+});
+
+it('previews at the aspect ratio link cards actually crop to', function () {
+    $card = public_path(config('oscar.og_image'));
+
+    expect($card)->toBeFile();
+
+    [$width, $height] = getimagesize($card);
+
+    expect($width)->toBe(1200)
+        ->and($height)->toBe(630);
+});
+
 it('renders a print-only poster on every locale', function (string $locale) {
     expect($this->get("/{$locale}")->getContent())->toContain('break-inside-avoid print:block');
 })->with('locales');

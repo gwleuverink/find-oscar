@@ -6,8 +6,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $case->fullName() }}</title>
-    <meta name="robots" content="noindex, follow">
+    <title>{{ $title }}</title>
+    <meta name="description" content="{{ $description }}">
+    <meta name="robots" content="index, follow">
+
+    {{-- This is the address people actually share, so it carries the same
+         preview card as the pages it forwards to. Without these a link
+         to the bare domain posts as a naked URL nobody opens. --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:image" content="{{ $case->ogImageUrl() }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="{{ $case->origin() }}/">
+    <meta name="twitter:card" content="summary_large_image">
+
     <link rel="canonical" href="{{ $case->url($default) }}">
     @foreach ($case->locales() as $code)
         <link rel="alternate" hreflang="{{ $code }}" href="{{ $case->url($code) }}">

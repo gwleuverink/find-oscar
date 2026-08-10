@@ -245,7 +245,7 @@ class CaseFile
         return $this->origin().'/'.$this->get('og_image');
     }
 
-    protected function origin(): string
+    public function origin(): string
     {
         return rtrim(config('app.url'), '/');
     }
