@@ -95,7 +95,7 @@
                         <p class="text-sm font-bold text-notice-900">{{ __('site.hero.emergency_prompt') }}</p>
                         <p class="text-xs text-notice-800/80">{{ __('site.contact.tr_only') }}</p>
                     </div>
-                    <a href="tel:{{ $emergency }}"
+                    <a href="tel:{{ $emergency }}" data-confirm-emergency
                        class="rounded-md bg-notice-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-notice-700">
                         {{ __('site.hero.emergency_action', ['number' => $emergency]) }}
                     </a>
@@ -214,7 +214,7 @@
                 <p class="mt-2 max-w-prose text-sm leading-relaxed text-notice-900">
                     {{ __('site.contact.emergency_body', ['number' => $emergency]) }}
                 </p>
-                <a href="tel:{{ $emergency }}"
+                <a href="tel:{{ $emergency }}" data-confirm-emergency
                    class="mt-4 inline-block rounded-md bg-notice-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-notice-700 print:hidden">
                     {{ __('site.contact.call') }} {{ $emergency }}
                 </a>
@@ -236,11 +236,29 @@
                             <p class="mt-1 text-sm leading-relaxed text-slate-600">{{ $contact['note'] }}</p>
                         @endif
 
+                        @if ($station = ($contact['station'] ?? null))
+                            <p class="mt-3 text-sm text-slate-600">
+                                <span class="font-mono text-xs tracking-wider text-slate-500 uppercase">{{ $station['label'] }}</span><br>
+                                <a href="{{ $station['url'] }}" rel="noopener"
+                                   class="font-semibold text-slate-900 underline underline-offset-2 hover:text-slate-600">
+                                    {{ $station['name'] }}</a><br>
+                                {{ $station['address'] }}
+                            </p>
+                        @endif
+
                         <div class="mt-auto flex flex-wrap gap-2 pt-4">
-                            <a href="{{ $contact['href'] }}"
-                               class="rounded-md bg-slate-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-800">
-                                {{ __('site.contact.call') }} <span class="font-mono">{{ $contact['number'] }}</span>
-                            </a>
+                            @if ($contact['href'])
+                                <a href="{{ $contact['href'] }}"
+                                   class="rounded-md bg-slate-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-800">
+                                    {{ __('site.contact.call') }} <span class="font-mono">{{ $contact['number'] }}</span>
+                                </a>
+                            @endif
+                            @if ($contact['mailto'])
+                                <a href="{{ $contact['mailto'] }}"
+                                   class="rounded-md bg-slate-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-800">
+                                    <span class="font-mono">{{ $contact['email'] }}</span>
+                                </a>
+                            @endif
                             @if ($contact['whatsapp'])
                                 <a href="{{ $contact['whatsapp'] }}" rel="noopener"
                                    class="rounded-md bg-white px-4 py-2 text-sm font-bold text-slate-900 ring-1 ring-slate-300 transition hover:bg-slate-50">
@@ -324,6 +342,29 @@
     </div>
 
 </div>
+
+    {{-- A misdialled 112 ties up a line someone else may be waiting on, and
+         the button sits next to a tip button people are meant to press.
+         Without JS the dialog never opens and the call goes straight
+         through, which is the right way for this to fail. --}}
+    <dialog id="emergency-confirm"
+            class="m-auto w-[calc(100%-2rem)] max-w-md rounded-xl border border-notice-300 p-0 shadow-xl backdrop:bg-slate-900/60 print:hidden">
+        <div class="p-5">
+            <h2 class="text-lg font-bold text-notice-900">{{ __('site.contact.confirm_title') }}</h2>
+            <p class="mt-2 text-sm leading-relaxed text-slate-700">{{ __('site.contact.confirm_body') }}</p>
+
+            <div class="mt-5 flex flex-wrap justify-end gap-2">
+                <button type="button" data-confirm-cancel
+                        class="rounded-md bg-white px-4 py-2 text-sm font-bold text-slate-900 ring-1 ring-slate-300 transition hover:bg-slate-50">
+                    {{ __('site.contact.confirm_cancel') }}
+                </button>
+                <a href="tel:{{ $emergency }}"
+                   class="rounded-md bg-notice-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-notice-700">
+                    {{ __('site.contact.call') }} {{ $emergency }}
+                </a>
+            </div>
+        </div>
+    </dialog>
 
     <x-poster :$case :$locale />
 

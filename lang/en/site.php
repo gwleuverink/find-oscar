@@ -23,7 +23,7 @@ return [
     'sections' => [
         'description' => 'Description',
         'lastseen' => 'Where he was last seen',
-        'belongings' => 'What he has with him',
+        'belongings' => 'What he was travelling with',
         'contact' => 'If you have seen him',
         'share' => 'Please share this page',
     ],
@@ -48,6 +48,7 @@ return [
     ],
 
     'values' => [
+        'height' => 'About :height cm',
         'nationality' => ['nl' => 'Dutch'],
         'build' => [
             'slim' => 'Slim, wiry',
@@ -70,28 +71,23 @@ return [
         ],
     ],
 
-    'marks' => [
-        'gold_chain' => 'Wears a thin gold chain around his neck',
-        'weathered_face' => 'Tanned, weathered face with deep horizontal lines across the forehead',
-    ],
-
     'belongings' => [
         'red_daypack' => 'A small red backpack, which he uses as hand luggage',
-        'dark_travel_bag' => 'A dark grey or black travel bag with clothing',
-        'laptop_cyrillic' => 'A laptop in a case. Its keyboard is covered with Cyrillic letter stickers over the normal letters, which is unusual and easy to remember.',
+        'dark_travel_bag' => 'Probably a dark grey or black travel bag with clothing',
+        'laptop_cyrillic' => 'Possibly a laptop in a case. Its keyboard is covered with Cyrillic letter stickers over the normal letters, which is unusual and easy to remember.',
     ],
 
     'journey' => [
         'title' => 'His journey, and where it stops',
         'arrived' => ['label' => 'Arrived in Istanbul', 'detail' => 'On a flight from Eindhoven, landing in the evening.'],
-        'hotel' => ['label' => 'Staying in Kartal', 'detail' => 'At the Emirtimes Hotel, for three nights.'],
+        'hotel' => ['label' => 'Staying in Tuzla', 'detail' => 'At the Emirtimes Hotel, a three-day stopover on the way to Omsk.'],
         'last_contact' => ['label' => 'Last contact', 'detail' => 'A phone call at 16:18 Istanbul time. Nothing since.'],
         'flight' => ['label' => 'Flight to Omsk', 'detail' => 'Via Moscow. He never boarded it.'],
     ],
 
     'lastseen' => [
-        'body' => 'Oscar arrived in Istanbul on 30 July 2026 and stayed at the Emirtimes Hotel in Kartal. On Monday 3 August he was due to fly on to Moscow and then to Omsk in Russia. He never boarded that flight. The last contact with him was a phone call at 16:18 Istanbul time that same day. Since then his phone has been unreachable and nobody has heard from him. This is completely out of character, and his family has reported him missing to the police in the Netherlands.',
-        'anchor_note' => 'The hotel in Kartal and the road to Sabiha Gökçen airport are the two places where someone is most likely to have seen him.',
+        'body' => 'Oscar arrived in Istanbul on 30 July 2026 and stayed at the Emirtimes Hotel in Tuzla. On Monday 3 August he was due to fly on to Moscow and then to Omsk in Russia. He never boarded that flight. The last contact with him was a phone call at 16:18 Istanbul time that same day. Since then his phone has been unreachable and nobody has heard from him. This is completely out of character, and his family has reported him missing to the police in the Netherlands.',
+        'anchor_note' => 'The Emirtimes Hotel in Tuzla is the last place he is known to have been. Anyone who works there, stayed there, or was in Tuzla during those days may have seen him.',
     ],
 
     'contact' => [
@@ -99,19 +95,26 @@ return [
         'emergency_body' => 'Call :number, the emergency number in Turkey. Use it only if someone is in immediate danger or needs medical help. It can only be dialled from inside Turkey.',
         'tr_only' => 'Only works inside Turkey',
 
+        'confirm_title' => 'Call the emergency number?',
+        'confirm_body' => '112 is for emergencies only. Call it if he is in danger or needs help right now. If you are reporting a sighting from an earlier day, please use one of the other contacts instead.',
+        'confirm_cancel' => 'Cancel',
+
         'meet_title' => 'If you meet him and he is well',
-        'meet_body' => 'Please help him get in touch with his family on the number below. His own phone has been off since 3 August, so he may have no way to call.',
+        'meet_body' => 'Please help him get in touch with his family, using the contact details below. His own phone has been off since 3 August, so he may have no way to reach them.',
 
         'tips_title' => 'If you have information',
-        'tips_body' => 'Every number below can be reached from any country. Please get in touch even if what you know seems small or uncertain.',
+        'tips_body' => 'Everything below can be reached from any country. Please get in touch even if what you know seems small or uncertain.',
 
         'police_nl' => 'Dutch police',
+        'police_nl_station' => 'Report filed at',
         'police_nl_note' => 'The missing person report is registered with them, so anything you tell them reaches the investigation directly. Inside the Netherlands, call :domestic.',
         'mfa_nl' => 'Dutch Ministry of Foreign Affairs (24/7)',
         'mfa_nl_note' => 'The consular helpline already involved in this case. They also answer on WhatsApp.',
         'family' => "Oscar's parents",
         'family_note' => 'They speak Dutch and English.',
         'in_turkey_note' => 'If you are in Turkey, you can also report what you know in person at any police station (karakol).',
+
+        'email' => 'Send an email',
 
         'call' => 'Call',
         'whatsapp' => 'Message on WhatsApp',

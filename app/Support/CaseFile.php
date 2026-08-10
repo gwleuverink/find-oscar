@@ -100,7 +100,9 @@ class CaseFile
             'full_name' => $this->fullName(),
             'age' => __('site.labels.years', ['count' => $this->age()]),
             'nationality' => __('site.values.nationality.'.$this->get('nationality_code')),
-            'height' => $this->get('height_cm') ? $this->get('height_cm').' cm' : null,
+            'height' => $this->get('height_cm')
+                ? __('site.values.height', ['height' => $this->get('height_cm')])
+                : null,
             'build' => $this->translatedKey('build', 'build_key'),
             'hair' => $this->translatedKey('hair', 'hair_key'),
             'eyes' => $this->translatedKey('eyes', 'eyes_key'),
@@ -122,6 +124,21 @@ class CaseFile
         $key = $this->get($configKey);
 
         return $key ? __("site.values.{$group}.{$key}") : null;
+    }
+
+    /**
+     * Height and build, for the poster. Both are readable across a street,
+     * which eye colour is not, so the flyer carries these two and
+     * leaves the rest of the description to the page.
+     */
+    public function physicalSummary(): string
+    {
+        return collect([
+            $this->get('height_cm')
+                ? __('site.values.height', ['height' => $this->get('height_cm')])
+                : null,
+            $this->translatedKey('build', 'build_key'),
+        ])->filter()->join(' · ');
     }
 
     public function languages(): string
@@ -189,14 +206,25 @@ class CaseFile
      */
     public function tipContacts(): array
     {
+        $police = $this->contact(
+            label: __('site.contact.police_nl'),
+            number: $this->get('contacts.tips.police_nl.number'),
+            note: __('site.contact.police_nl_note', [
+                'domestic' => $this->get('contacts.tips.police_nl.domestic'),
+            ]),
+        );
+
+        // The station holding the file, so a caller can say which case they
+        // are ringing about rather than starting from nothing.
+        $police['station'] = [
+            'label' => __('site.contact.police_nl_station'),
+            'name' => $this->get('contacts.tips.police_nl.station'),
+            'address' => $this->get('contacts.tips.police_nl.address'),
+            'url' => $this->get('contacts.tips.police_nl.url'),
+        ];
+
         $contacts = [
-            $this->contact(
-                label: __('site.contact.police_nl'),
-                number: $this->get('contacts.tips.police_nl.number'),
-                note: __('site.contact.police_nl_note', [
-                    'domestic' => $this->get('contacts.tips.police_nl.domestic'),
-                ]),
-            ),
+            $police,
             $this->contact(
                 label: __('site.contact.mfa_nl'),
                 number: $this->get('contacts.tips.mfa_nl.number'),
@@ -208,16 +236,28 @@ class CaseFile
                 number: $this->get('contacts.tips.family.number'),
                 note: __('site.contact.family_note'),
                 whatsapp: $this->get('contacts.tips.family.whatsapp'),
+                email: $this->get('contacts.tips.family.email'),
             ),
         ];
 
         return array_values(array_filter($contacts));
     }
 
-    /** @return array{label: string, note: ?string, number: string, href: string, whatsapp: ?string}|null */
-    protected function contact(string $label, ?string $number, ?string $note = null, ?string $whatsapp = null): ?array
-    {
-        if (! $number) {
+    /**
+     * A route is worth rendering if it can be reached at all, by phone or by
+     * email. The family is reachable only by email, so a contact without
+     * a number is still a contact rather than a dead card.
+     *
+     * @return array{label: string, note: ?string, number: ?string, href: ?string, whatsapp: ?string, email: ?string, mailto: ?string}|null
+     */
+    protected function contact(
+        string $label,
+        ?string $number,
+        ?string $note = null,
+        ?string $whatsapp = null,
+        ?string $email = null,
+    ): ?array {
+        if (! $number && ! $email) {
             return null;
         }
 
@@ -225,8 +265,10 @@ class CaseFile
             'label' => $label,
             'note' => $note,
             'number' => $number,
-            'href' => 'tel:'.preg_replace('/[^0-9+]/', '', $number),
+            'href' => $number ? 'tel:'.preg_replace('/[^0-9+]/', '', $number) : null,
             'whatsapp' => $whatsapp ? 'https://wa.me/'.$whatsapp : null,
+            'email' => $email,
+            'mailto' => $email ? 'mailto:'.$email : null,
         ];
     }
 

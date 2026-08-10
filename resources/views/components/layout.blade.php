@@ -63,6 +63,30 @@
         document.querySelectorAll('[data-print]').forEach((el) => {
             el.addEventListener('click', () => window.print());
         });
+
+        // Guard the emergency number behind a confirmation. If the browser
+        // has no dialog support the listener never binds, and the link
+        // dials exactly as it would have done anyway.
+        const emergency = document.getElementById('emergency-confirm');
+
+        if (emergency?.showModal) {
+            document.querySelectorAll('[data-confirm-emergency]').forEach((el) => {
+                el.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    emergency.showModal();
+                });
+            });
+
+            emergency.querySelector('[data-confirm-cancel]')
+                ?.addEventListener('click', () => emergency.close());
+
+            // Clicking the backdrop falls on the dialog itself, never a child.
+            emergency.addEventListener('click', (event) => {
+                if (event.target === emergency) {
+                    emergency.close();
+                }
+            });
+        }
     </script>
 </body>
 </html>

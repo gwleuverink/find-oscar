@@ -23,12 +23,12 @@ return [
     'nationality_code' => 'nl',
 
     /*
-    | Physical description. Height, build and clothing were not in the police
-    | report, so they are null until the family confirms them. Anything
-    | left null is simply omitted from the rendered page.
+    | Physical description. Height comes from the family and is approximate;
+    | build, hair and eyes are read off the photographs. What he was
+    | wearing that day is still unknown. Nulls are not rendered.
     */
 
-    'height_cm' => null,            // TODO: confirm with family
+    'height_cm' => 185,             // approximate; rendered as "about 185 cm"
     'build_key' => 'slim',          // slim | average | heavy — from photos, confirm
     'hair_key' => 'blond_thinning',
     'eyes_key' => 'blue_grey',
@@ -36,14 +36,12 @@ return [
     'facial_hair' => false,
 
     /*
-    | Distinguishing features that a stranger could actually spot. Keys map
-    | to translated strings so each one reads naturally per locale.
+    | No distinguishing features listed. What was here was read off the
+    | photographs rather than taken from the report, and the photos
+    | are on the page saying it better than the words did.
     */
 
-    'marks' => [
-        'gold_chain',               // thin gold neck chain, visible in all photos
-        'weathered_face',
-    ],
+    'marks' => [],
 
     'languages' => ['nl', 'en', 'ru_basic'],
 
@@ -57,17 +55,22 @@ return [
     'last_contact_time_istanbul' => '16:18',
     'last_seen_city' => 'Istanbul',
     'last_seen_country_code' => 'tr',
-    'last_seen_hotel' => 'Emirtimes Hotel, Kartal, Istanbul',
-    'last_seen_district' => 'Kartal',
+    /*
+    | Branch confirmed by the family. Worth knowing: the phone number in the
+    | report belongs to the group's Kadıköy branch, not this one, so any
+    | call placed to that number reached the wrong hotel entirely.
+    */
+
+    'last_seen_hotel' => 'Emirtimes Hotel, Demokrasi Cad. 36, Tuzla, Istanbul',
+    'last_seen_district' => 'Tuzla',
 
     /*
-    | He was travelling to Sabiha Gökçen for a flight onward to Moscow and
-    | then Omsk, and never boarded it. The hotel and the airport are the
-    | two anchors most likely to jog a local witness's memory.
+    | He was flying on to Moscow and then Omsk, and never boarded. The
+    | report does not name the airport, so neither does the site: the
+    | hotel is the only location a witness can actually be given.
     */
 
     'intended_destination' => 'Omsk, Russia (via Moscow)',
-    'intended_airport' => 'Istanbul Sabiha Gökçen (SAW)',
     'arrived_istanbul_date' => '2026-07-30',
 
     /*
@@ -78,7 +81,7 @@ return [
 
     'journey' => [
         ['key' => 'arrived', 'date' => '2026-07-30'],
-        ['key' => 'hotel', 'date' => '2026-07-31'],
+        ['key' => 'hotel', 'date' => '2026-07-30'],
         ['key' => 'last_contact', 'date' => '2026-08-03'],
         ['key' => 'flight', 'date' => '2026-08-03', 'broken' => true],
     ],
@@ -139,12 +142,21 @@ return [
 
         'tips' => [
 
-            // The missing person report was filed in the Netherlands, so the
-            // Dutch police hold the case. This is their non-emergency
-            // line, reachable from abroad, unlike 0900-8844.
+            /*
+            | The report was filed in the Netherlands, so the Dutch police
+            | hold the case. Stations share one public number, so
+            | 0900-8844 reaches Drachten as much as anywhere, and
+            | naming the station is what identifies the file.
+            |
+            | 0900-8844 does not connect from outside the Netherlands,
+            | which is why the international line is the one dialled.
+            */
             'police_nl' => [
                 'number' => '+31343578844',
                 'domestic' => '0900-8844',
+                'station' => 'Politiebureau Drachten',
+                'address' => 'Moleneind zuidzijde 77, 9203 ZW Drachten',
+                'url' => 'https://www.politie.nl/mijn-buurt/politiebureaus/01/fryslan/drachten.html',
             ],
 
             // Nederland Wereldwijd, the Dutch MFA's 24/7 consular centre,
@@ -155,17 +167,16 @@ return [
             ],
 
             /*
-            | Withheld at the family's request: no private numbers on a public
-            | page. A published mobile invites cranks and, in a case that
-            | already involves extortion, worse. To be replaced by a
-            | mailto address once they have one set up.
+            | Email only, at the family's request. No private numbers on a
+            | public page: a published mobile invites cranks and, in a
+            | case that already involves extortion, worse.
             |
-            | 'family' => [
-            |     'name' => 'Dirk & Rita Huizinga',
-            |     'number' => '+316...',
-            |     'whatsapp' => '316...',
-            | ],
+            | This address forwards to a private one, so it can be scraped
+            | and abandoned without costing anybody their real inbox.
             */
+            'family' => [
+                'email' => 'findoscarhuizinga@gmail.com',
+            ],
         ],
 
         // TODO: add once the police issue a reference number for the case.

@@ -34,9 +34,17 @@ it('translates every string it renders', function (string $locale) {
 it('publishes no bank details or home addresses', function (string $locale) {
     $content = $this->get("/{$locale}")->getContent();
 
-    expect($content)
-        ->not->toMatch('/\bNL\d{2}[A-Z]{4}\d{10}\b/')    // an IBAN
-        ->not->toMatch('/\b\d{4}\s?[A-Z]{2}\b(?![^<]*<\/code>)/');  // a Dutch postcode
+    expect($content)->not->toMatch('/\bNL\d{2}[A-Z]{4}\d{10}\b/');   // an IBAN
+
+    // The police station is a public building and is published on purpose.
+    // Any other Dutch postcode on the page is somebody's home.
+    preg_match_all('/\b\d{4}\s?[A-Z]{2}\b/', $content, $found);
+
+    $publicAddress = config('oscar.contacts.tips.police_nl.address');
+
+    foreach (array_unique($found[0]) as $postcode) {
+        expect($publicAddress)->toContain($postcode);
+    }
 })->with('locales');
 
 it('dials nothing the case configuration does not publish', function (string $locale) {
@@ -47,6 +55,7 @@ it('dials nothing the case configuration does not publish', function (string $lo
 
     $published = collect($case->tipContacts())
         ->pluck('number')
+        ->filter()
         ->map(fn (string $number): string => preg_replace('/[^0-9+]/', '', $number))
         ->push($case->emergencyNumber())
         ->all();
@@ -65,12 +74,28 @@ it('dials nothing the case configuration does not publish', function (string $lo
 })->with('locales');
 
 it('only offers numbers that can be dialled from abroad as tip lines', function () {
-    // Short codes such as 112 reach the caller's own country, not Turkey,
-    // so every tip route has to carry a full international prefix.
+    // Short codes such as 112 reach the caller's own country, not Turkey, so
+    // every tip route that is a phone number carries a full international
+    // prefix. Email-only routes travel just fine on their own.
     foreach (CaseFile::fromConfig()->tipContacts() as $contact) {
-        expect($contact['number'])->toStartWith('+');
+        if ($contact['number']) {
+            expect($contact['number'])->toStartWith('+');
+        } else {
+            expect($contact['email'])->toContain('@');
+        }
     }
 });
+
+it('reaches the family by email and never by a private number', function (string $locale) {
+    $family = collect(CaseFile::fromConfig()->tipContacts())
+        ->firstWhere('label', __('site.contact.family'));
+
+    expect($family)->not->toBeNull()
+        ->and($family['number'])->toBeNull()
+        ->and($family['whatsapp'])->toBeNull();
+
+    expect($this->get("/{$locale}")->getContent())->toContain($family['mailto']);
+})->with('locales');
 
 it('sends the emergency number somewhere different from the tip lines', function () {
     $case = CaseFile::fromConfig();
@@ -117,6 +142,20 @@ it('previews at the aspect ratio link cards actually crop to', function () {
     expect($width)->toBe(1200)
         ->and($height)->toBe(630);
 });
+
+it('guards the emergency number behind a confirmation', function (string $locale) {
+    $content = $this->get("/{$locale}")->getContent();
+
+    expect($content)
+        ->toContain('id="emergency-confirm"')
+        ->toContain(__('site.contact.confirm_title'));
+
+    // Both routes to 112 go through the dialog, not just the one in the hero.
+    // Matched on the anchor itself, since the script names the hook too.
+    $emergency = CaseFile::fromConfig()->emergencyNumber();
+
+    expect(substr_count($content, "\"tel:{$emergency}\" data-confirm-emergency"))->toBe(2);
+})->with('locales');
 
 it('renders a print-only poster on every locale', function (string $locale) {
     expect($this->get("/{$locale}")->getContent())->toContain('break-inside-avoid print:block');

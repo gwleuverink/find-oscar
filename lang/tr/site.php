@@ -23,7 +23,7 @@ return [
     'sections' => [
         'description' => 'Eşkâl',
         'lastseen' => 'En son nerede görüldü',
-        'belongings' => 'Yanında bulunanlar',
+        'belongings' => 'Yanında götürdükleri',
         'contact' => 'Onu gördüyseniz',
         'share' => 'Lütfen bu sayfayı paylaşın',
     ],
@@ -48,6 +48,7 @@ return [
     ],
 
     'values' => [
+        'height' => 'Yaklaşık :height cm',
         'nationality' => ['nl' => 'Hollanda'],
         'build' => [
             'slim' => 'Zayıf, ince yapılı',
@@ -70,28 +71,23 @@ return [
         ],
     ],
 
-    'marks' => [
-        'gold_chain' => 'Boynunda ince altın bir zincir takıyor',
-        'weathered_face' => 'Güneşten yanmış, yıpranmış yüz; alnında derin yatay çizgiler',
-    ],
-
     'belongings' => [
         'red_daypack' => 'El bagajı olarak kullandığı küçük kırmızı bir sırt çantası',
-        'dark_travel_bag' => 'İçinde kıyafet bulunan koyu gri veya siyah bir seyahat çantası',
-        'laptop_cyrillic' => 'Çantasında bir dizüstü bilgisayar. Klavyesindeki harflerin üzerine Kiril alfabesi çıkartmaları yapıştırılmış; sıra dışı ve akılda kalıcı bir ayrıntı.',
+        'dark_travel_bag' => 'Muhtemelen içinde kıyafet bulunan koyu gri veya siyah bir seyahat çantası',
+        'laptop_cyrillic' => 'Muhtemelen çantasında bir dizüstü bilgisayar. Klavyesindeki harflerin üzerine Kiril alfabesi çıkartmaları yapıştırılmış; sıra dışı ve akılda kalıcı bir ayrıntı.',
     ],
 
     'journey' => [
         'title' => 'Yolculuğu ve kesildiği an',
         'arrived' => ['label' => 'İstanbul\'a geldi', 'detail' => 'Eindhoven\'dan gelen uçakla, akşam saatlerinde indi.'],
-        'hotel' => ['label' => 'Kartal\'da konakladı', 'detail' => 'Emirtimes Hotel\'de, üç gece boyunca.'],
+        'hotel' => ['label' => 'Tuzla\'da kaldı', 'detail' => 'Emirtimes Hotel\'de; Omsk yolculuğunda üç günlük bir mola.'],
         'last_contact' => ['label' => 'Son iletişim', 'detail' => 'İstanbul saatiyle 16.18\'de bir telefon görüşmesi. Sonrasında hiçbir haber yok.'],
         'flight' => ['label' => 'Omsk uçuşu', 'detail' => 'Moskova aktarmalı. O uçağa hiç binmedi.'],
     ],
 
     'lastseen' => [
-        'body' => 'Oscar 30 Temmuz 2026 tarihinde İstanbul\'a geldi ve Kartal\'daki Emirtimes Hotel\'de kaldı. 3 Ağustos Pazartesi günü önce Moskova\'ya, ardından Rusya\'nın Omsk şehrine uçacaktı. O uçağa hiç binmedi. Kendisiyle son iletişim, aynı gün İstanbul saatiyle 16.18\'de yapılan bir telefon görüşmesi oldu. O saatten beri telefonuna ulaşılamıyor ve kendisinden hiçbir haber alınamadı. Bu durum onun karakterine hiç uymuyor. Ailesi Hollanda\'da polise kayıp ihbarında bulundu.',
-        'anchor_note' => 'Kartal\'daki otel ve Sabiha Gökçen Havalimanı\'na giden güzergâh, onu birinin görmüş olma ihtimalinin en yüksek olduğu iki yer.',
+        'body' => 'Oscar 30 Temmuz 2026 tarihinde İstanbul\'a geldi ve Tuzla\'daki Emirtimes Hotel\'de kaldı. 3 Ağustos Pazartesi günü önce Moskova\'ya, ardından Rusya\'nın Omsk şehrine uçacaktı. O uçağa hiç binmedi. Kendisiyle son iletişim, aynı gün İstanbul saatiyle 16.18\'de yapılan bir telefon görüşmesi oldu. O saatten beri telefonuna ulaşılamıyor ve kendisinden hiçbir haber alınamadı. Bu durum onun karakterine hiç uymuyor. Ailesi Hollanda\'da polise kayıp ihbarında bulundu.',
+        'anchor_note' => 'Tuzla\'daki Emirtimes Hotel, bulunduğu bilinen son yer. Orada çalışan, orada kalan ya da o günlerde Tuzla\'da bulunan herkes onu görmüş olabilir.',
     ],
 
     'contact' => [
@@ -99,19 +95,26 @@ return [
         'emergency_body' => 'Türkiye\'nin acil çağrı numarası olan :number\'ı arayın. Bu numarayı yalnızca birinin hayati tehlikede olduğu ya da tıbbi yardıma ihtiyaç duyduğu durumlarda kullanın. Yalnızca Türkiye içinden aranabilir.',
         'tr_only' => 'Yalnızca Türkiye içinden aranabilir',
 
+        'confirm_title' => 'Acil çağrı numarası aransın mı?',
+        'confirm_body' => '112 yalnızca acil durumlar içindir. Şu anda tehlikedeyse veya yardıma ihtiyacı varsa arayın. Daha önceki bir günde gördüğünüzü bildirecekseniz lütfen diğer iletişim yollarını kullanın.',
+        'confirm_cancel' => 'Vazgeç',
+
         'meet_title' => 'Onunla karşılaşırsanız ve durumu iyiyse',
-        'meet_body' => 'Lütfen aşağıdaki numaradan ailesine ulaşmasına yardımcı olun. Kendi telefonu 3 Ağustos\'tan beri kapalı; kendi başına arama yapamıyor olabilir.',
+        'meet_body' => 'Lütfen aşağıdaki iletişim bilgilerini kullanarak ailesine ulaşmasına yardımcı olun. Kendi telefonu 3 Ağustos\'tan beri kapalı; onlara kendisi ulaşamıyor olabilir.',
 
         'tips_title' => 'Bilginiz varsa',
-        'tips_body' => 'Aşağıdaki numaraların tamamına her ülkeden ulaşılabilir. Bildiğiniz şey önemsiz ya da belirsiz görünse bile lütfen bize ulaşın.',
+        'tips_body' => 'Aşağıdaki iletişim yollarının tamamına her ülkeden ulaşılabilir. Bildiğiniz şey önemsiz ya da belirsiz görünse bile lütfen bize ulaşın.',
 
         'police_nl' => 'Hollanda polisi',
+        'police_nl_station' => 'İhbarın yapıldığı karakol',
         'police_nl_note' => 'Kayıp ihbarı onlara kayıtlı; anlattıklarınız doğrudan soruşturmaya ulaşır. Hollanda içinden :domestic numarasını arayabilirsiniz.',
         'mfa_nl' => 'Hollanda Dışişleri Bakanlığı (7/24)',
         'mfa_nl_note' => 'Bu dosyayı takip eden konsolosluk yardım hattı. WhatsApp üzerinden de yanıt veriyorlar.',
         'family' => 'Oscar\'ın ailesi',
         'family_note' => 'Hollandaca ve İngilizce konuşuyorlar.',
         'in_turkey_note' => 'Türkiye\'deyseniz bildiklerinizi en yakın karakola giderek de bildirebilirsiniz.',
+
+        'email' => 'E-posta gönderin',
 
         'call' => 'Ara',
         'whatsapp' => 'WhatsApp\'tan yazın',

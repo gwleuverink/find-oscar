@@ -6,7 +6,7 @@
 @endphp
 
 {{--
-    The paper version. A flyer taped to a wall in Kartal gets about two
+    The paper version. A flyer taped to a wall in Istanbul gets about two
     seconds of a passer-by's attention, so it carries the face, one
     sentence and one number, and nothing else competes with them.
 
@@ -43,6 +43,10 @@
                     'date' => $case->lastSeenFormatted($locale),
                 ]) }}
             </p>
+
+            @if ($physical = $case->physicalSummary())
+                <p class="mt-2 font-semibold">{{ $physical }}</p>
+            @endif
 
             <dl class="mt-3 space-y-1 text-sm">
                 <div class="flex gap-3">
@@ -99,7 +103,9 @@
                     @foreach ($case->tipContacts() as $contact)
                         <div>
                             <p class="text-xs text-slate-700">{{ $contact['label'] }}</p>
-                            <p class="font-mono text-lg leading-tight font-bold">{{ $contact['number'] }}</p>
+                            <p class="font-mono leading-tight font-bold {{ $contact['number'] ? 'text-lg' : 'text-base' }}">
+                                {{ $contact['number'] ?? $contact['email'] }}
+                            </p>
                         </div>
                     @endforeach
                 </div>
