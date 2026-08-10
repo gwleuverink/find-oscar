@@ -103,6 +103,7 @@ it('gives the shared root a preview card', function () {
         ->assertSee('property="og:description"', escape: false)
         ->assertSee('property="og:image"', escape: false)
         ->assertSee('name="twitter:card"', escape: false)
+        ->assertSee('name="twitter:image"', escape: false)
         ->assertDontSee('noindex');
 });
 

@@ -22,7 +22,11 @@
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ $case->url($locale) }}">
     <meta property="og:locale" content="{{ $locale }}">
+    {{-- X falls back to the og: tags, but naming the image explicitly takes
+         one variable out of a card that has already failed once. --}}
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ $case->ogImageUrl() }}">
+    <meta name="twitter:image:alt" content="{{ $case->fullName() }}">
 
     @foreach ($case->locales() as $alternate)
         <link rel="alternate" hreflang="{{ $alternate }}" href="{{ $case->url($alternate) }}">

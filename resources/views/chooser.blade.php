@@ -21,6 +21,8 @@
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="{{ $case->origin() }}/">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ $case->ogImageUrl() }}">
+    <meta name="twitter:image:alt" content="{{ $case->fullName() }}">
 
     <link rel="canonical" href="{{ $case->url($default) }}">
     @foreach ($case->locales() as $code)
